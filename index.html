@@ -237,4 +237,48 @@
         }
 
         data.products.forEach(function(prod) {
-            seller
+            sellerList.innerHTML += '<div class="product-card">' +
+                '<div><div style="font-weight:600;">' + prod.name + '</div>' +
+                '<button class="delete-btn" onclick="deleteProduct(' + prod.id + ')">Sil 🗑️</button></div>' +
+                '<div class="product-price">' + prod.price + ' AZN</div>' +
+                '</div>';
+        });
+    }
+
+    function showCustomerView(shopKey) {
+        var data = JSON.parse(localStorage.getItem('shop_' + shopKey));
+        
+        document.getElementById('authSection').style.display = "none";
+        document.getElementById('dashboard').style.display = "none";
+        document.getElementById('customerView').style.display = "block";
+        
+        if (!data) {
+            document.getElementById('customerProductList').innerHTML = "<h3>Mağaza tapılmadı!</h3>";
+            return;
+        }
+
+        document.getElementById('clientShopName').innerText = data.shopName;
+        var clientList = document.getElementById('customerProductList');
+        clientList.innerHTML = "";
+
+        if (data.products.length === 0) {
+            clientList.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>Bu mağazada hələ ki məhsul yoxdur.</p>";
+            return;
+        }
+
+        data.products.forEach(function(prod) {
+            var message = encodeURIComponent("Salam, Sizin mağazadan bu məhsulu sifariş etmək istəyirəm:\n📦 Məhsul: " + prod.name + "\n💰 Qiymət: " + prod.price + " AZN");
+            var wsLink = "https://wa.me/" + data.phone + "?text=" + message;
+
+            clientList.innerHTML += '<div class="product-card">' +
+                '<div>' +
+                    '<div style="font-weight:600; font-size:16px;">' + prod.name + '</div>' +
+                    '<a href="' + wsLink + '" target="_blank" class="ws-btn">WhatsApp ilə Al 💬</a>' +
+                '</div>' +
+                '<div class="product-price">' + prod.price + ' AZN</div>' +
+                '</div>';
+        });
+    }
+</script>
+</body>
+</html>
