@@ -3,143 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaaS Mağaza Platforması</title>
+    <title>Magazam.az — SaaS Platforması</title>
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+        }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4f6f9;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
         }
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            box-sizing: border-box;
         }
-        h2, h3, h4 { text-align: center; color: #333; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background-color: #28a745; border: none; color: white; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #218838; }
-        .status-box { margin-top: 15px; padding: 12px; border-radius: 4px; text-align: center; display: none; font-weight: bold; }
+        h2, h3, h4 { margin-top: 0; font-weight: 700; text-align: center; }
+        h2 { color: var(--text); font-size: 24px; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
         
-        #dashboard { display: none; margin-top: 10px; }
-        .product-card { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; float: right; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 6px; font-size: 14px; color: #475569; }
+        input { 
+            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; 
+            box-sizing: border-box; font-size: 15px; transition: all 0.2s; background: #f1f5f9;
+        }
+        input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        
+        button { 
+            width: 100%; padding: 14px; background-color: var(--success); border: none; 
+            color: white; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; 
+            transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+        }
+        button:hover { transform: translateY(-1px); box-shadow: 0 6px 8px -1px rgba(16, 185, 129, 0.3); }
+        
+        .status-box { margin-top: 15px; padding: 14px; border-radius: 10px; text-align: center; display: none; font-weight: 600; font-size: 14px; }
+        
+        #dashboard { display: none; }
+        .header-panel { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .badge { background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        
+        .section-box { background: #f1f5f9; padding: 16px; border-radius: 12px; margin-bottom: 24px; }
+        .section-box h4 { text-align: left; margin-bottom: 12px; font-size: 16px; color: #334155; }
+        
+        .product-card { 
+            background: var(--card-bg); border: 1px solid #e2e8f0; padding: 14px; 
+            margin-top: 10px; border-radius: 10px; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .product-price { color: var(--primary); font-weight: 700; font-size: 16px; }
+        
+        /* Alıcı Vitrini */
+        .showcase-title { font-size: 16px; color: var(--text); margin-top: 25px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .live-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="authSection">
-        <h2>Mağazanı Qeydiyyatdan Keçir</h2>
+        <h2>magazam.az</h2>
+        <div class="subtitle">Öz SaaS mağaza imperiyanı qurmağa başla</div>
         <div class="form-group">
-            <label>Satıcı Adı:</label>
-            <input type="text" id="vendorName" placeholder="Məs: Kənan Həsənov">
+            <label>Satıcı (Ad Soyad):</label>
+            <input type="text" id="vendorName" placeholder="Məsələn: Kənan Həsənov">
         </div>
         <div class="form-group">
-            <label>Mağaza Adı:</label>
-            <input type="text" id="shopName" placeholder="Məs: KenanShop">
+            <label>Mağaza Adı (Brend):</label>
+            <input type="text" id="shopName" placeholder="Məsələn: Hasanov Electronics">
         </div>
-        <button id="regBtn" onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
+        <button onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
         <div id="statusBox" class="status-box"></div>
     </div>
 
     <div id="dashboard">
-        <h3>Panel <span class="badge">Aktiv</span></h3>
-        <p>Satıcı: <span id="displayVendor" style="font-weight:bold;"></span></p>
-        <p>Mağaza: <span id="displayShop" style="font-weight:bold; color:#007bff;"></span></p>
+        <div class="header-panel">
+            <div style="font-weight: 800; font-size: 18px;" id="displayShop"></div>
+            <span class="badge">Aktiv SaaS</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 0;">Xoş gəldiniz, <span id="displayVendor" style="color:var(--text); font-weight:600;"></span> 👋</p>
         
-        <div style="background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px; margin-top: 20px;">
-            <h4>Yeni Məhsul Əlavə Et</h4>
+        <div class="section-box">
+            <h4>Məhsul Əlavə Et</h4>
             <div class="form-group">
-                <label>Məhsulun Adı:</label>
-                <input type="text" id="prodName" placeholder="Məs: iPhone 15 Pro">
+                <input type="text" id="prodName" placeholder="Məhsulun adı (Məs: iPhone 15 Pro)">
             </div>
             <div class="form-group">
-                <label>Qiyməti (AZN):</label>
-                <input type="number" id="prodPrice" placeholder="Məs: 2400">
+                <input type="number" id="prodPrice" placeholder="Qiyməti (AZN)">
             </div>
-            <button style="background-color: #007bff;" onclick="addProduct()">Vitrinə Yerləşdir</button>
+            <button style="background-color: var(--primary); box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);" onclick="addProduct()">Vitrinə Yerləşdir</button>
         </div>
 
-        <h4>Məhsullarınız:</h4>
+        <div class="showcase-title">
+            <span>🛒 Müştəri Vitrini (Canlı Ünvan)</span>
+            <span style="display: flex; align-items: center; font-size: 12px; color: var(--text-muted); font-weight: normal;"><span class="live-dot"></span>&nbsp;Canlı</span>
+        </div>
         <div id="productList"></div>
     </div>
 </div>
 
 <script>
-    // Qeydiyyat funksiyası
+    // Səhifə açılanda yaddaşda köhnə mağaza varmı deyə baxır
+    window.onload = function() {
+        var savedShop = localStorage.getItem('activeSaaSShop');
+        if (savedShop) {
+            openDashboard(savedShop);
+        }
+    }
+
     function registerShop() {
         var name = document.getElementById('vendorName').value.trim();
         var shop = document.getElementById('shopName').value.trim();
         var statusBox = document.getElementById('statusBox');
 
         if (name === "" || shop === "") {
-            alert("Zəhmət olmasa bütün xanaları doldurun!");
+            alert("Zəhmət olmasa xanaları boş qoymayın!");
             return;
         }
 
-        // Ödəniş gözləmə simulyasiyası
         statusBox.style.display = "block";
-        statusBox.style.backgroundColor = "#ffc107";
-        statusBox.style.color = "#000";
-        statusBox.innerHTML = "Ödəniş avtomatik yoxlanılır...";
+        statusBox.style.backgroundColor = "#fef3c7";
+        statusBox.style.color = "#b45309";
+        statusBox.innerHTML = "⚡ Ödəniş şlüzü yoxlanılır...";
 
         setTimeout(function() {
-            statusBox.style.backgroundColor = "#28a745";
-            statusBox.style.color = "white";
-            statusBox.innerHTML = "✓ Ödəniş təsdiqləndi! Panel açılır...";
+            statusBox.style.backgroundColor = "#dcfce7";
+            statusBox.style.color = "#15803d";
+            statusBox.innerHTML = "✓ Ödəniş uğurlu! Sisteminiz qurulur...";
 
             setTimeout(function() {
-                // Formu gizlət və Paneli Göstər
-                document.getElementById('authSection').style.display = "none";
-                document.getElementById('dashboard').style.display = "block";
-                
-                // Məlumatları ekrana yaz
-                document.getElementById('displayVendor').innerText = name;
-                document.getElementById('displayShop').innerText = shop;
-                
-                // İlk boş siyahını göstər
-                document.getElementById('productList').innerHTML = "<p style='color:#888; text-align:center;'>Hələ məhsul yoxdur.</p>";
-            }, 1500);
+                // Məlumatları bazaya yazırıq (Həmişəlik qalır)
+                var dbData = { vendorName: name, shopName: shop, products: [] };
+                localStorage.setItem('shop_' + shop, JSON.stringify(dbData));
+                localStorage.setItem('activeSaaSShop', shop);
 
+                openDashboard(shop);
+            }, 1500);
         }, 2000);
     }
 
-    // Məhsul əlavə etmə funksiyası
+    function openDashboard(shopKey) {
+        var data = JSON.parse(localStorage.getItem('shop_' + shopKey));
+        if(!data) return;
+
+        document.getElementById('authSection').style.display = "none";
+        document.getElementById('dashboard').style.display = "block";
+        
+        document.getElementById('displayVendor').innerText = data.vendorName;
+        document.getElementById('displayShop').innerText = data.shopName;
+        
+        renderProducts(shopKey);
+    }
+
     function addProduct() {
+        var currentShop = localStorage.getItem('activeSaaSShop');
         var pName = document.getElementById('prodName').value.trim();
         var pPrice = document.getElementById('prodPrice').value.trim();
-        var listDiv = document.getElementById('productList');
 
         if (pName === "" || pPrice === "") {
-            alert("Məhsulun adını və qiymətini yazın!");
+            alert("Məhsul adı və qiymətini yazın!");
             return;
         }
 
-        // Əgər ilk məhsuldursa, "Hələ məhsul yoxdur" yazısını sil
-        if(listDiv.innerHTML.includes("Hələ məhsul yoxdur")) {
-            listDiv.innerHTML = "";
-        }
+        var data = JSON.parse(localStorage.getItem('shop_' + currentShop));
+        data.products.push({ name: pName, price: pPrice });
+        
+        // Yenilənmiş siyahını yaddaşa yazırıq
+        localStorage.setItem('shop_' + currentShop, JSON.stringify(data));
 
-        // Yeni məhsul kartını siyahıya əlavə et
-        var newProductHTML = '<div class="product-card">' +
-            '<span><b>' + pName + '</b></span>' +
-            '<span style="color:#28a745; font-weight:bold;">' + pPrice + ' AZN</span>' +
-            '</div>';
-            
-        listDiv.innerHTML += newProductHTML;
-
-        // İnputları təmizlə
         document.getElementById('prodName').value = "";
         document.getElementById('prodPrice').value = "";
+
+        renderProducts(currentShop);
+    }
+
+    function renderProducts(currentShop) {
+        var data = JSON.parse(localStorage.getItem('shop_' + currentShop));
+        var listDiv = document.getElementById('productList');
+        listDiv.innerHTML = "";
+
+        if (data.products.length === 0) {
+            listDiv.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:14px; margin-top:20px;'>Vitrin boşdur. Yuxarıdan ilk məhsulunu əlavə et!</p>";
+            return;
+        }
+
+        data.products.forEach(function(prod) {
+            listDiv.innerHTML += '<div class="product-card">' +
+                '<div>' +
+                    '<div style="font-weight: 600; font-size: 15px;">' + prod.name + '</div>' +
+                    '<div style="font-size: 12px; color: var(--text-muted); margin-top:2px;">Stokda var</div>' +
+                '</div>' +
+                '<div class="product-price">' + prod.price + ' AZN</div>' +
+                '</div>';
+        });
     }
 </script>
 </body>
