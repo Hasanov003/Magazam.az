@@ -19,9 +19,9 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
         }
-        h2, h3 { text-align: center; color: #333; }
+        h2, h3, h4 { text-align: center; color: #333; margin-top: 0; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
         input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
@@ -29,10 +29,9 @@
         button:hover { background-color: #218838; }
         .status-box { margin-top: 15px; padding: 12px; border-radius: 4px; text-align: center; display: none; font-weight: bold; }
         
-        /* Satıcı Paneli üçün vizual üslublar */
-        #dashboard { display: none; margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px; }
+        #dashboard { display: none; margin-top: 10px; }
         .product-card { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
+        .badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; float: right; }
     </style>
 </head>
 <body>
@@ -48,16 +47,16 @@
             <label>Mağaza Adı:</label>
             <input type="text" id="shopName" placeholder="Məs: KenanShop">
         </div>
-        <button onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
+        <button id="regBtn" onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
         <div id="statusBox" class="status-box"></div>
     </div>
 
     <div id="dashboard">
-        <h3>Mağaza İdarəetmə Paneli <span class="badge">Aktiv</span></h3>
-        <p>Xoş gəldiniz, <span id="displayVendor" style="font-weight:bold;"></span>!</p>
-        <p>Mağazanız: <span id="displayShop" style="font-weight:bold; color:#007bff;"></span></p>
+        <h3>Panel <span class="badge">Aktiv</span></h3>
+        <p>Satıcı: <span id="displayVendor" style="font-weight:bold;"></span></p>
+        <p>Mağaza: <span id="displayShop" style="font-weight:bold; color:#007bff;"></span></p>
         
-        <div style="background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+        <div style="background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px; margin-top: 20px;">
             <h4>Yeni Məhsul Əlavə Et</h4>
             <div class="form-group">
                 <label>Məhsulun Adı:</label>
@@ -67,74 +66,81 @@
                 <label>Qiyməti (AZN):</label>
                 <input type="number" id="prodPrice" placeholder="Məs: 2400">
             </div>
-            <button style="background-color: #007bff;" onclick="addProduct()">Məhsulu Vitrinə Qoy</button>
+            <button style="background-color: #007bff;" onclick="addProduct()">Vitrinə Yerləşdir</button>
         </div>
 
-        <h4>Məhsulların Siyahısı:</h4>
+        <h4>Məhsullarınız:</h4>
         <div id="productList"></div>
     </div>
 </div>
 
 <script>
-    let currentShop = ""; 
-
+    // Qeydiyyat funksiyası
     function registerShop() {
-        const name = document.getElementById('vendorName').value;
-        const shop = document.getElementById('shopName').value;
-        const statusBox = document.getElementById('statusBox');
+        var name = document.getElementById('vendorName').value.trim();
+        var shop = document.getElementById('shopName').value.trim();
+        var statusBox = document.getElementById('statusBox');
 
-        if(name === "" || shop === "") {
-            alert("Xanaları doldurun!");
+        if (name === "" || shop === "") {
+            alert("Zəhmət olmasa bütün xanaları doldurun!");
             return;
         }
 
-        currentShop = shop;
-
-        const vendorData = { vendorName: name, shopName: shop, isPaid: false, products: [] };
-        localStorage.setItem(shop, JSON.stringify(vendorData));
-
+        // Ödəniş gözləmə simulyasiyası
         statusBox.style.display = "block";
         statusBox.style.backgroundColor = "#ffc107";
+        statusBox.style.color = "#000";
         statusBox.innerHTML = "Ödəniş avtomatik yoxlanılır...";
 
-        setTimeout(() => {
-            vendorData.isPaid = true;
-            localStorage.setItem(shop, JSON.stringify(vendorData));
-
+        setTimeout(function() {
             statusBox.style.backgroundColor = "#28a745";
             statusBox.style.color = "white";
-            statusBox.innerHTML = "✓ Ödəniş təsdiqləndi! Panelə yönləndirilirsiniz...";
+            statusBox.innerHTML = "✓ Ödəniş təsdiqləndi! Panel açılır...";
 
-            setTimeout(() => {
-                openDashboard(shop);
-            }, 2000);
+            setTimeout(function() {
+                // Formu gizlət və Paneli Göstər
+                document.getElementById('authSection').style.display = "none";
+                document.getElementById('dashboard').style.display = "block";
+                
+                // Məlumatları ekrana yaz
+                document.getElementById('displayVendor').innerText = name;
+                document.getElementById('displayShop').innerText = shop;
+                
+                // İlk boş siyahını göstər
+                document.getElementById('productList').innerHTML = "<p style='color:#888; text-align:center;'>Hələ məhsul yoxdur.</p>";
+            }, 1500);
 
-        }, 3000);
+        }, 2000);
     }
 
-    function openDashboard(shopName) {
-        const data = JSON.parse(localStorage.getItem(shopName));
-        
-        document.getElementById('authSection').style.display = "none";
-        document.getElementById('dashboard').style.display = "block";
-        
-        document.getElementById('displayVendor').innerText = data.vendorName;
-        document.getElementById('displayShop').innerText = data.shopName;
-        
-        renderProducts();
-    }
-
+    // Məhsul əlavə etmə funksiyası
     function addProduct() {
-        const pName = document.getElementById('prodName').value;
-        const pPrice = document.getElementById('prodPrice').value;
+        var pName = document.getElementById('prodName').value.trim();
+        var pPrice = document.getElementById('prodPrice').value.trim();
+        var listDiv = document.getElementById('productList');
 
-        if(pName === "" || pPrice === "") {
-            alert("Məhsul məlumatlarını tam daxil edin!");
+        if (pName === "" || pPrice === "") {
+            alert("Məhsulun adını və qiymətini yazın!");
             return;
         }
 
-        let data = JSON.parse(localStorage.getItem(currentShop));
-        
-        data.products.push({ name: pName, price: pPrice });
-        
-        localStorage.setItem(currentShop, JSON.
+        // Əgər ilk məhsuldursa, "Hələ məhsul yoxdur" yazısını sil
+        if(listDiv.innerHTML.includes("Hələ məhsul yoxdur")) {
+            listDiv.innerHTML = "";
+        }
+
+        // Yeni məhsul kartını siyahıya əlavə et
+        var newProductHTML = '<div class="product-card">' +
+            '<span><b>' + pName + '</b></span>' +
+            '<span style="color:#28a745; font-weight:bold;">' + pPrice + ' AZN</span>' +
+            '</div>';
+            
+        listDiv.innerHTML += newProductHTML;
+
+        // İnputları təmizlə
+        document.getElementById('prodName').value = "";
+        document.getElementById('prodPrice').value = "";
+    }
+</script>
+</body>
+</html>
