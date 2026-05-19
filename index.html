@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magazam.az — Sizin SaaS Mağazanız</title>
+    <title>Magazam.az — Öz Online Mağazanı Qur</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -53,11 +53,9 @@
         
         .status-box { margin-top: 15px; padding: 14px; border-radius: 10px; text-align: center; display: none; font-weight: 600; font-size: 14px; }
         
-        /* Link Bölməsi */
         .link-box { background: #eff6ff; border: 1px dashed #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; text-align: center; word-break: break-all; }
         .link-box a { color: #2563eb; font-weight: bold; text-decoration: none; }
 
-        /* Məhsul Kartları */
         .section-box { background: #f1f5f9; padding: 16px; border-radius: 12px; margin-bottom: 24px; }
         .section-box h4 { text-align: left; margin-bottom: 12px; font-size: 16px; color: #334155; }
         
@@ -80,7 +78,7 @@
 <div class="container">
     <div id="authSection" style="display: none;">
         <h2>magazam.az</h2>
-        <div class="subtitle">Öz SaaS mağaza imperiyanı qurmağa başla</div>
+        <div class="subtitle">Öz online mağazanı qurmağa başla</div>
         <div class="form-group">
             <label>Satıcı (Ad Soyad):</label>
             <input type="text" id="vendorName" placeholder="Məsələn: Kənan Həsənov">
@@ -93,14 +91,14 @@
             <label>Sifarişlər üçün WhatsApp Nömrəniz:</label>
             <input type="text" id="vendorPhone" placeholder="Məsələn: 99450XXXXXXX">
         </div>
-        <button onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
+        <button onclick="registerShop()">Qeydiyyatdan Keç və Mağaza Aç</button>
         <div id="statusBox" class="status-box"></div>
     </div>
 
     <div id="dashboard" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px;">
             <div style="font-weight: 800; font-size: 20px; color: var(--primary);" id="displayShop"></div>
-            <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">Satıcı Paneli</span>
+            <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">İdarəetmə Paneli</span>
         </div>
         
         <div class="link-box">
@@ -115,7 +113,7 @@
             <button style="background-color: var(--primary);" onclick="addProduct()">Vitrinə Yerləşdir</button>
         </div>
 
-        <h4 style="text-align: left; font-size: 15px; color: var(--text-muted);">Vitrinindəki Məhsullar (Sən görən):</h4>
+        <h4 style="text-align: left; font-size: 15px; color: var(--text-muted); margin-bottom: 5px;">Vitrinindəki Məhsullar:</h4>
         <div id="sellerProductList"></div>
     </div>
 
@@ -127,22 +125,19 @@
             </div>
         </div>
         
-        <h4>Məhsullar Catalogu</h4>
+        <h4>Məhsul Kataloqu</h4>
         <div id="customerProductList"></div>
     </div>
 </div>
 
 <script>
     window.onload = function() {
-        // Brauzerin linkində "?shop=MagazaAdi" hissəsi varmı deyə yoxlayır
         const urlParams = new URLSearchParams(window.location.search);
         const shopParam = urlParams.get('shop');
 
         if (shopParam) {
-            // Əgər linkdə mağaza adı varsa, bura MÜŞTƏRİ səhifəsidir
             showCustomerView(shopParam);
         } else {
-            // Əgər link təmizdirsə, SATICI yoxlanılır
             var savedShop = localStorage.getItem('activeSaaSShop');
             if (savedShop) {
                 openDashboard(savedShop);
@@ -154,7 +149,7 @@
 
     function registerShop() {
         var name = document.getElementById('vendorName').value.trim();
-        var shop = document.getElementById('shopName').value.trim().replace(/\s+/g, ''); // Boşluqları silir
+        var shop = document.getElementById('shopName').value.trim().replace(/\s+/g, '');
         var phone = document.getElementById('vendorPhone').value.trim();
         var statusBox = document.getElementById('statusBox');
 
@@ -166,12 +161,12 @@
         statusBox.style.display = "block";
         statusBox.style.backgroundColor = "#fef3c7";
         statusBox.style.color = "#b45309";
-        statusBox.innerHTML = "⚡ Ödəniş və hosting yoxlanılır...";
+        statusBox.innerHTML = "⚡ Mağazanız yaradılır...";
 
         setTimeout(function() {
             statusBox.style.backgroundColor = "#dcfce7";
             statusBox.style.color = "#15803d";
-            statusBox.innerHTML = "✓ Sistem uğurla aktiv edildi!";
+            statusBox.innerHTML = "✓ Mağaza uğurla aktiv edildi!";
 
             setTimeout(function() {
                 var dbData = { vendorName: name, shopName: shop, phone: phone, products: [] };
@@ -193,7 +188,6 @@
         
         document.getElementById('displayShop').innerText = data.shopName;
         
-        // Müştərilər üçün unikal link yaradırıq
         var currentUrl = window.location.href.split('?')[0];
         var liveStoreUrl = currentUrl + "?shop=" + data.shopName;
         document.getElementById('storeLink').innerHTML = '<a href="' + liveStoreUrl + '" target="_blank">' + liveStoreUrl + '</a>';
@@ -243,50 +237,4 @@
         }
 
         data.products.forEach(function(prod) {
-            sellerList.innerHTML += '<div class="product-card">' +
-                '<div><div style="font-weight:600;">' + prod.name + '</div>' +
-                '<button class="delete-btn" onclick="deleteProduct(' + prod.id + ')">Sil 🗑️</button></div>' +
-                '<div class="product-price">' + prod.price + ' AZN</div>' +
-                '</div>';
-        });
-    }
-
-    // ALICI INTERFEYSİ FUNKSİYASI
-    function showCustomerView(shopKey) {
-        var data = JSON.parse(localStorage.getItem('shop_' + shopKey));
-        
-        document.getElementById('authSection').style.display = "none";
-        document.getElementById('dashboard').style.display = "none";
-        document.getElementById('customerView').style.display = "block";
-        
-        if (!data) {
-            document.getElementById('customerProductList').innerHTML = "<h3>Mağaza tapılmadı! 404</h3>";
-            return;
-        }
-
-        document.getElementById('clientShopName').innerText = data.shopName;
-        var clientList = document.getElementById('customerProductList');
-        clientList.innerHTML = "";
-
-        if (data.products.length === 0) {
-            clientList.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>Bu mağazada hələ ki məhsul yoxdur.</p>";
-            return;
-        }
-
-        data.products.forEach(function(prod) {
-            // WhatsApp mesaj linki hazırlamaq
-            var message = encodeURIComponent("Salam, Sizin mağazadan bu məhsulu sifariş etmək istəyirəm:\n📦 Məhsul: " + prod.name + "\n💰 Qiymət: " + prod.price + " AZN");
-            var wsLink = "https://wa.me/" + data.phone + "?text=" + message;
-
-            clientList.innerHTML += '<div class="product-card">' +
-                '<div>' +
-                    '<div style="font-weight:600; font-size:16px;">' + prod.name + '</div>' +
-                    '<a href="' + wsLink + '" target="_blank" class="ws-btn">WhatsApp ilə Al 💬</a>' +
-                '</div>' +
-                '<div class="product-price">' + prod.price + ' AZN</div>' +
-                '</div>';
-        });
-    }
-</script>
-</body>
-</html>
+            seller
