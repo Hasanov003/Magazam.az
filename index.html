@@ -3,157 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mağaza Platforması - Qeydiyyat</title>
+    <title>SaaS Mağaza Platforması</title>
     <style>
-        /* Səhifənin ümumi vizual dizaynı (CSS) */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
         }
         .container {
-            background-color: #ffffff;
+            background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
         }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-weight: 600;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .status-box {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            display: none;
-            font-weight: bold;
-        }
+        h2, h3 { text-align: center; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #28a745; border: none; color: white; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        .status-box { margin-top: 15px; padding: 12px; border-radius: 4px; text-align: center; display: none; font-weight: bold; }
+        
+        /* Satıcı Paneli üçün vizual üslublar */
+        #dashboard { display: none; margin-top: 20px; border-top: 2px dashed #ccc; padding-top: 20px; }
+        .product-card { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .badge { background: #28a745; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Mağazanı Qeydiyyatdan Keçir</h2>
-    
-    <!-- İstifadəçi Məlumat daxiletmə forması -->
-    <div class="form-group">
-        <label for="vendorName">Satıcı Adı Soyadı:</label>
-        <input type="text" id="vendorName" placeholder="Məs: Əli Məmmədov">
-    </div>
-    
-    <div class="form-group">
-        <label for="shopName">Mağaza Adı (Unikal):</label>
-        <input type="text" id="shopName" placeholder="Məs: ElitElektronika">
+    <div id="authSection">
+        <h2>Mağazanı Qeydiyyatdan Keçir</h2>
+        <div class="form-group">
+            <label>Satıcı Adı:</label>
+            <input type="text" id="vendorName" placeholder="Məs: Kənan Həsənov">
+        </div>
+        <div class="form-group">
+            <label>Mağaza Adı:</label>
+            <input type="text" id="shopName" placeholder="Məs: KenanShop">
+        </div>
+        <button onclick="registerShop()">Qeydiyyatdan Keç və Ödəniş Et</button>
+        <div id="statusBox" class="status-box"></div>
     </div>
 
-    <button onclick="registerShop()">Qeydiyyatdan Keç və Ödənişə Yönəl</button>
+    <div id="dashboard">
+        <h3>Mağaza İdarəetmə Paneli <span class="badge">Aktiv</span></h3>
+        <p>Xoş gəldiniz, <span id="displayVendor" style="font-weight:bold;"></span>!</p>
+        <p>Mağazanız: <span id="displayShop" style="font-weight:bold; color:#007bff;"></span></p>
+        
+        <div style="background: #e9ecef; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+            <h4>Yeni Məhsul Əlavə Et</h4>
+            <div class="form-group">
+                <label>Məhsulun Adı:</label>
+                <input type="text" id="prodName" placeholder="Məs: iPhone 15 Pro">
+            </div>
+            <div class="form-group">
+                <label>Qiyməti (AZN):</label>
+                <input type="number" id="prodPrice" placeholder="Məs: 2400">
+            </div>
+            <button style="background-color: #007bff;" onclick="addProduct()">Məhsulu Vitrinə Qoy</button>
+        </div>
 
-    <!-- Mağazanın statusunu canlı göstərən qutu -->
-    <div id="statusBox" class="status-box"></div>
+        <h4>Məhsulların Siyahısı:</h4>
+        <div id="productList"></div>
+    </div>
 </div>
 
 <script>
-    // Proqramlaşdırma Məntiqi (JavaScript)
-    
+    let currentShop = ""; 
+
     function registerShop() {
-        // Düyməyə basıldıqda inputlardan məlumatları alırıq
         const name = document.getElementById('vendorName').value;
         const shop = document.getElementById('shopName').value;
         const statusBox = document.getElementById('statusBox');
 
-        // Boşluq yoxlaması (Validation)
         if(name === "" || shop === "") {
-            alert("Zəhmət olmasa bütün xanaları doldurun!");
+            alert("Xanaları doldurun!");
             return;
         }
 
-        // Yeni satıcı obyekti yaradırıq. 
-        // "isPaid: false" - çünki hələ ödəniş etməyib. Mağazası bağlıdır.
-        const newVendor = {
-            vendorName: name,
-            shopName: shop,
-            isPaid: false,
-            products: []
-        };
+        currentShop = shop;
 
-        // Brauzerin müvəqqəti yadddaşına (LocalStorage) satıcını qeyd edirik
-        localStorage.setItem(shop, JSON.stringify(newVendor));
+        const vendorData = { vendorName: name, shopName: shop, isPaid: false, products: [] };
+        localStorage.setItem(shop, JSON.stringify(vendorData));
 
-        // İstifadəçiyə vizual mesaj göstəririk
         statusBox.style.display = "block";
         statusBox.style.backgroundColor = "#ffc107";
-        statusBox.style.color = "#000";
-        statusBox.innerHTML = `Mağaza yaradıldı: <b>${shop}</b><br>Status: Gözləmədə (Ödəniş edilməyib)`;
+        statusBox.innerHTML = "Ödəniş avtomatik yoxlanılır...";
 
-        // 3 saniyə sonra sistemi avtomatik olaraq ÖDƏNİŞ SƏHİFƏSİNƏ simulyasiya edirik
         setTimeout(() => {
-            simulatePayment(shop);
+            vendorData.isPaid = true;
+            localStorage.setItem(shop, JSON.stringify(vendorData));
+
+            statusBox.style.backgroundColor = "#28a745";
+            statusBox.style.color = "white";
+            statusBox.innerHTML = "✓ Ödəniş təsdiqləndi! Panelə yönləndirilirsiniz...";
+
+            setTimeout(() => {
+                openDashboard(shop);
+            }, 2000);
+
         }, 3000);
     }
 
-    // Ödəniş edildikdə avtomatik aktivləşməni təmin edən funksiya
-    function simulatePayment(shopName) {
-        const statusBox = document.getElementById('statusBox');
-        statusBox.style.backgroundColor = "#17a2b8";
-        statusBox.style.color = "white";
-        statusBox.innerHTML = "Ödəniş sistemi işə düşür... Avtomatik yoxlanılır...";
-
-        // Bankdan gələn müsbət cavabı simulyasiya edirik (Ödəniş uğurlu oldu)
-        setTimeout(() => {
-            // Yaddaşdan mağazanı çağırırıq
-            let vendorData = JSON.parse(localStorage.getItem(shopName));
-            
-            // AVTOMATİK AKTİVLƏŞMƏ: isPaid dəyərini true edirik
-            vendorData.isPaid = true; 
-            
-            // Yenilənmiş məlumatı verilənlər bazasına (yaddaşa) geri yazırıq
-            localStorage.setItem(shopName, JSON.stringify(vendorData));
-
-            // Mağazanın statusunu dərhal aktiv olaraq yeniləyirik
-            statusBox.style.backgroundColor = "#28a745";
-            statusBox.innerHTML = `✓ Ödəniş təsdiqləndi! <br> <b>${shopName}</b> mağazası avtomatik olaraq AKTİV edildi!`;
-        }, 4000);
+    function openDashboard(shopName) {
+        const data = JSON.parse(localStorage.getItem(shopName));
+        
+        document.getElementById('authSection').style.display = "none";
+        document.getElementById('dashboard').style.display = "block";
+        
+        document.getElementById('displayVendor').innerText = data.vendorName;
+        document.getElementById('displayShop').innerText = data.shopName;
+        
+        renderProducts();
     }
-</script>
 
-</body>
-</html>
+    function addProduct() {
+        const pName = document.getElementById('prodName').value;
+        const pPrice = document.getElementById('prodPrice').value;
+
+        if(pName === "" || pPrice === "") {
+            alert("Məhsul məlumatlarını tam daxil edin!");
+            return;
+        }
+
+        let data = JSON.parse(localStorage.getItem(currentShop));
+        
+        data.products.push({ name: pName, price: pPrice });
+        
+        localStorage.setItem(currentShop, JSON.
