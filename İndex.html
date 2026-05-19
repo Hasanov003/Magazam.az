@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mağaza Platforması - Qeydiyyat</title>
+    <style>
+        /* Səhifənin ümumi vizual dizaynı (CSS) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 600;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .status-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Mağazanı Qeydiyyatdan Keçir</h2>
+    
+    <!-- İstifadəçi Məlumat daxiletmə forması -->
+    <div class="form-group">
+        <label for="vendorName">Satıcı Adı Soyadı:</label>
+        <input type="text" id="vendorName" placeholder="Məs: Əli Məmmədov">
+    </div>
+    
+    <div class="form-group">
+        <label for="shopName">Mağaza Adı (Unikal):</label>
+        <input type="text" id="shopName" placeholder="Məs: ElitElektronika">
+    </div>
+
+    <button onclick="registerShop()">Qeydiyyatdan Keç və Ödənişə Yönəl</button>
+
+    <!-- Mağazanın statusunu canlı göstərən qutu -->
+    <div id="statusBox" class="status-box"></div>
+</div>
+
+<script>
+    // Proqramlaşdırma Məntiqi (JavaScript)
+    
+    function registerShop() {
+        // Düyməyə basıldıqda inputlardan məlumatları alırıq
+        const name = document.getElementById('vendorName').value;
+        const shop = document.getElementById('shopName').value;
+        const statusBox = document.getElementById('statusBox');
+
+        // Boşluq yoxlaması (Validation)
+        if(name === "" || shop === "") {
+            alert("Zəhmət olmasa bütün xanaları doldurun!");
+            return;
+        }
+
+        // Yeni satıcı obyekti yaradırıq. 
+        // "isPaid: false" - çünki hələ ödəniş etməyib. Mağazası bağlıdır.
+        const newVendor = {
+            vendorName: name,
+            shopName: shop,
+            isPaid: false,
+            products: []
+        };
+
+        // Brauzerin müvəqqəti yadddaşına (LocalStorage) satıcını qeyd edirik
+        localStorage.setItem(shop, JSON.stringify(newVendor));
+
+        // İstifadəçiyə vizual mesaj göstəririk
+        statusBox.style.display = "block";
+        statusBox.style.backgroundColor = "#ffc107";
+        statusBox.style.color = "#000";
+        statusBox.innerHTML = `Mağaza yaradıldı: <b>${shop}</b><br>Status: Gözləmədə (Ödəniş edilməyib)`;
+
+        // 3 saniyə sonra sistemi avtomatik olaraq ÖDƏNİŞ SƏHİFƏSİNƏ simulyasiya edirik
+        setTimeout(() => {
+            simulatePayment(shop);
+        }, 3000);
+    }
+
+    // Ödəniş edildikdə avtomatik aktivləşməni təmin edən funksiya
+    function simulatePayment(shopName) {
+        const statusBox = document.getElementById('statusBox');
+        statusBox.style.backgroundColor = "#17a2b8";
+        statusBox.style.color = "white";
+        statusBox.innerHTML = "Ödəniş sistemi işə düşür... Avtomatik yoxlanılır...";
+
+        // Bankdan gələn müsbət cavabı simulyasiya edirik (Ödəniş uğurlu oldu)
+        setTimeout(() => {
+            // Yaddaşdan mağazanı çağırırıq
+            let vendorData = JSON.parse(localStorage.getItem(shopName));
+            
+            // AVTOMATİK AKTİVLƏŞMƏ: isPaid dəyərini true edirik
+            vendorData.isPaid = true; 
+            
+            // Yenilənmiş məlumatı verilənlər bazasına (yaddaşa) geri yazırıq
+            localStorage.setItem(shopName, JSON.stringify(vendorData));
+
+            // Mağazanın statusunu dərhal aktiv olaraq yeniləyirik
+            statusBox.style.backgroundColor = "#28a745";
+            statusBox.innerHTML = `✓ Ödəniş təsdiqləndi! <br> <b>${shopName}</b> mağazası avtomatik olaraq AKTİV edildi!`;
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
