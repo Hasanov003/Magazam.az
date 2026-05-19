@@ -3,280 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magazam.az — Öz Online Mağazanı Qur</title>
+    <title>TapAl.az — Elanlar və Online Mağazalar</title>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --success: #10b981;
-            --bg: #f8fafc;
+            --primary: #ff4f00; /* Tap.az / Lalafo narıncı üslub */
+            --primary-hover: #e04600;
+            --success: #25d366;
+            --bg: #f2f4f5;
             --card-bg: #ffffff;
-            --text: #0f172a;
-            --text-muted: #64748b;
+            --text: #2c3e50;
+            --text-muted: #7f8c8d;
         }
         body {
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ffffff;
             padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
         }
-        .container {
-            background: var(--card-bg);
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 420px;
-            box-sizing: border-box;
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary); text-decoration: none; }
+        .nav-buttons button {
+            background: var(--primary); color: white; border: none; padding: 10px 15px; 
+            border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 10px;
         }
-        h2, h3, h4 { margin-top: 0; font-weight: 700; text-align: center; }
-        h2 { color: var(--text); font-size: 26px; margin-bottom: 8px; }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
         
-        .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; font-size: 14px; color: #475569; font-weight: 600; }
-        input { 
-            width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; 
-            box-sizing: border-box; font-size: 15px; transition: all 0.2s; background: #f1f5f9;
-        }
-        input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .main-container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
         
-        button { 
-            width: 100%; padding: 14px; background-color: var(--success); border: none; 
-            color: white; font-size: 16px; font-weight: 600; border-radius: 10px; cursor: pointer; 
-            transition: all 0.2s;
-        }
-        button:hover { transform: translateY(-1px); }
-        
-        .status-box { margin-top: 15px; padding: 14px; border-radius: 10px; text-align: center; display: none; font-weight: 600; font-size: 14px; }
-        
-        .link-box { background: #eff6ff; border: 1px dashed #3b82f6; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 13px; text-align: center; word-break: break-all; }
-        .link-box a { color: #2563eb; font-weight: bold; text-decoration: none; }
+        /* Kateqoriyalar */
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 25px; }
+        .cat-btn { background: white; border: 1px solid #dcdde1; padding: 10px 20px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-weight: bold; }
+        .cat-btn:hover, .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .section-box { background: #f1f5f9; padding: 16px; border-radius: 12px; margin-bottom: 24px; }
-        .section-box h4 { text-align: left; margin-bottom: 12px; font-size: 16px; color: #334155; }
-        
-        .product-card { 
-            background: var(--card-bg); border: 1px solid #e2e8f0; padding: 14px; 
-            margin-top: 12px; border-radius: 12px; display: flex; justify-content: space-between; 
-            align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.01);
-        }
-        .product-price { color: var(--primary); font-weight: 700; font-size: 16px; text-align: right; }
-        
-        .ws-btn { background: #25d366; color: white; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px; }
-        .delete-btn { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; margin-top: 5px; }
-        
-        .live-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 0.2; } 50% { opacity: 1; } 100% { opacity: 0.2; } }
+        /* Elanlar Şəbəkəsi */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; transition: 0.2s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #e1b12c10; }
+        .card-body { padding: 12px; }
+        .price { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
+        .title { font-size: 14px; color: #34495e; height: 36px; overflow: hidden; margin-bottom: 10px; }
+        .shop-badge { font-size: 11px; background: #eee; padding: 3px 6px; border-radius: 4px; color: var(--text-muted); }
+
+        /* Modal / Formlar */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-sizing: border-box; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .close-btn { background: #7f8c8d; color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; margin-top: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="authSection" style="display: none;">
-        <h2>magazam.az</h2>
-        <div class="subtitle">Öz online mağazanı qurmağa başla</div>
-        <div class="form-group">
-            <label>Satıcı (Ad Soyad):</label>
-            <input type="text" id="vendorName" placeholder="Məsələn: Kənan Həsənov">
+<header>
+    <div class="header-container">
+        <a href="#" class="logo" onclick="filterCategory('all')">👑 TapAl.az</a>
+        <div class="nav-buttons">
+            <button onclick="toggleModal('shopModal', true)" style="background:#2c3e50;">🏪 Mağaza Aç</button>
+            <button onclick="openAddProductModal()">➕ Yeni Elan</button>
         </div>
-        <div class="form-group">
-            <label>Mağaza Adı (Zəhmət olmasa bitişik yazın):</label>
-            <input type="text" id="shopName" placeholder="Məsələn: HasanovShop">
-        </div>
-        <div class="form-group">
-            <label>Sifarişlər üçün WhatsApp Nömrəniz:</label>
-            <input type="text" id="vendorPhone" placeholder="Məsələn: 99450XXXXXXX">
-        </div>
-        <button onclick="registerShop()">Qeydiyyatdan Keç və Mağaza Aç</button>
-        <div id="statusBox" class="status-box"></div>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="categories">
+        <button class="cat-btn active" id="cat-all" onclick="filterCategory('all')">Bütün Elanlar</button>
+        <button class="cat-btn" id="cat-elek" onclick="filterCategory('Elektronika')">📱 Elektronika</button>
+        <button class="cat-btn" id="cat-geyim" onclick="filterCategory('Geyim')">👕 Geyim</button>
+        <button class="cat-btn" id="cat-avto" onclick="filterCategory('Avto')">🚗 Avto</button>
+        <button class="cat-btn" id="cat-emlak" onclick="filterCategory('Əmlak')">🏠 Əmlak</button>
     </div>
 
-    <div id="dashboard" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 15px;">
-            <div style="font-weight: 800; font-size: 20px; color: var(--primary);" id="displayShop"></div>
-            <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">İdarəetmə Paneli</span>
-        </div>
-        
-        <div class="link-box">
-            📢 <b>Müştəriləriniz üçün Canlı Mağaza Linki:</b><br>
-            <span id="storeLink">Yüklənir...</span>
-        </div>
-        
-        <div class="section-box">
-            <h4>Yeni Məhsul Yüklə</h4>
-            <div class="form-group"><input type="text" id="prodName" placeholder="Məhsulun adı"></div>
-            <div class="form-group"><input type="number" id="prodPrice" placeholder="Qiyməti (AZN)"></div>
-            <button style="background-color: var(--primary);" onclick="addProduct()">Vitrinə Yerləşdir</button>
-        </div>
+    <h2 id="viewTitle" style="margin-bottom: 20px; font-size: 22px;">Son Əlavə Edilənlər</h2>
+    <div class="grid" id="mainGrid"></div>
+</div>
 
-        <h4 style="text-align: left; font-size: 15px; color: var(--text-muted); margin-bottom: 5px;">Vitrinindəki Məhsullar:</h4>
-        <div id="sellerProductList"></div>
+<div class="modal" id="shopModal">
+    <div class="modal-content">
+        <h3>🏪 Öz Online Mağazanı Qur</h3>
+        <div class="form-group">
+            <label>Mağaza / Brend Adı:</label>
+            <input type="text" id="newShopName" placeholder="Məs: Baku Electronics">
+        </div>
+        <div class="form-group">
+            <label>WhatsApp Nömrəniz:</label>
+            <input type="text" id="newShopPhone" placeholder="Məs: 994501234567">
+        </div>
+        <button onclick="createShop()" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Mağazanı Aktiv Et</button>
+        <button class="close-btn" onclick="toggleModal('shopModal', false)">Geri</button>
     </div>
+</div>
 
-    <div id="customerView" style="display: none;">
-        <div style="text-align: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 20px;">
-            <h2 id="clientShopName" style="color: var(--primary); margin-bottom: 2px;"></h2>
-            <div style="font-size: 13px; color: var(--text-muted);">
-                <span class="live-dot"></span> Canlı Mağaza Vitrini
-            </div>
+<div class="modal" id="productModal">
+    <div class="modal-content">
+        <h3>➕ Yeni Elan Yerləşdir</h3>
+        <div class="form-group">
+            <label>Məhsulun Adı:</label>
+            <input type="text" id="pName" placeholder="Məs: iPhone 15 Pro Max">
         </div>
-        
-        <h4>Məhsul Kataloqu</h4>
-        <div id="customerProductList"></div>
+        <div class="form-group">
+            <label>Qiymət (AZN):</label>
+            <input type="number" id="pPrice" placeholder="Məs: 2500">
+        </div>
+        <div class="form-group">
+            <label>Kateqoriya:</label>
+            <select id="pCategory">
+                <option value="Elektronika">📱 Elektronika</option>
+                <option value="Geyim">👕 Geyim</option>
+                <option value="Avto">🚗 Avto</option>
+                <option value="Əmlak">🏠 Əmlak</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Məhsul Şəkli (Şəkil Linki - Boş qala bilər):</label>
+            <input type="text" id="pImg" placeholder="https://site.com/shekil.jpg">
+        </div>
+        <button onclick="submitProduct()" style="width:100%; padding:12px; background:#25d366; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Elanı Yayımla</button>
+        <button class="close-btn" onclick="toggleModal('productModal', false)">Geri</button>
     </div>
 </div>
 
 <script>
+    let currentCategory = 'all';
+
+    // Defolt (Hazır) elanlar bazası (Sayt boş görünməsin deyə Lalafo üslubunda)
+    const defaultProducts = [
+        { id: 1, name: "iPhone 14 Pro, 256 GB", price: 1750, category: "Elektronika", img: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500", shop: "TapAl Rəsmi", phone: "994501234567" },
+        { id: 2, name: "Oversize Nike Hoodie", price: 65, category: "Geyim", img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500", shop: "TrendGeyim", phone: "994501234567" },
+        { id: 3, name: "BMW F30 Sükan çarxı", price: 400, category: "Avto", img: "https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=500", shop: "Autostore", phone: "994501234567" },
+        { id: 4, name: "2 Otaqlı Mənzil, Nərimanov r.", price: 145000, category: "Əmlak", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500", shop: "Evim Real Estate", phone: "994501234567" }
+    ];
+
     window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const shopParam = urlParams.get('shop');
-
-        if (shopParam) {
-            showCustomerView(shopParam);
-        } else {
-            var savedShop = localStorage.getItem('activeSaaSShop');
-            if (savedShop) {
-                openDashboard(savedShop);
-            } else {
-                document.getElementById('authSection').style.display = "block";
-            }
+        if (!localStorage.getItem('global_ads')) {
+            localStorage.setItem('global_ads', JSON.stringify(defaultProducts));
         }
+        renderGrid();
     }
 
-    function registerShop() {
-        var name = document.getElementById('vendorName').value.trim();
-        var shop = document.getElementById('shopName').value.trim().replace(/\s+/g, '');
-        var phone = document.getElementById('vendorPhone').value.trim();
-        var statusBox = document.getElementById('statusBox');
+    function toggleModal(id, show) {
+        document.getElementById(id).style.display = show ? "flex" : "none";
+    }
 
-        if (name === "" || shop === "" || phone === "") {
-            alert("Mütləq bütün xanaları doldurun!");
+    function openAddProductModal() {
+        let activeShop = localStorage.getItem('my_active_shop');
+        if (!activeShop) {
+            alert("Elan yerləşdirmək üçün əvvəlcə 'Mağaza Aç' düyməsindən qeydiyyatdan keçməlisiniz!");
+            toggleModal('shopModal', true);
             return;
         }
-
-        statusBox.style.display = "block";
-        statusBox.style.backgroundColor = "#fef3c7";
-        statusBox.style.color = "#b45309";
-        statusBox.innerHTML = "⚡ Mağazanız yaradılır...";
-
-        setTimeout(function() {
-            statusBox.style.backgroundColor = "#dcfce7";
-            statusBox.style.color = "#15803d";
-            statusBox.innerHTML = "✓ Mağaza uğurla aktiv edildi!";
-
-            setTimeout(function() {
-                var dbData = { vendorName: name, shopName: shop, phone: phone, products: [] };
-                localStorage.setItem('shop_' + shop, JSON.stringify(dbData));
-                localStorage.setItem('activeSaaSShop', shop);
-
-                openDashboard(shop);
-            }, 1200);
-        }, 1800);
+        toggleModal('productModal', true);
     }
 
-    function openDashboard(shopKey) {
-        var data = JSON.parse(localStorage.getItem('shop_' + shopKey));
-        if(!data) return;
-
-        document.getElementById('authSection').style.display = "none";
-        document.getElementById('dashboard').style.display = "block";
-        document.getElementById('customerView').style.display = "none";
+    function createShop() {
+        let sName = document.getElementById('newShopName').value.trim();
+        let sPhone = document.getElementById('newShopPhone').value.trim();
+        if(!sName || !sPhone) { alert("Xanaları doldurun!"); return; }
         
-        document.getElementById('displayShop').innerText = data.shopName;
+        localStorage.setItem('my_active_shop', sName);
+        localStorage.setItem('my_active_phone', sPhone);
         
-        var currentUrl = window.location.href.split('?')[0];
-        var liveStoreUrl = currentUrl + "?shop=" + data.shopName;
-        document.getElementById('storeLink').innerHTML = '<a href="' + liveStoreUrl + '" target="_blank">' + liveStoreUrl + '</a>';
-        
-        renderProducts(shopKey);
+        alert(`Təbriklər! '${sName}' mağazanız uğurla açıldı. İndi elan yerləşdirə bilərsiniz.`);
+        toggleModal('shopModal', false);
     }
 
-    function addProduct() {
-        var currentShop = localStorage.getItem('activeSaaSShop');
-        var pName = document.getElementById('prodName').value.trim();
-        var pPrice = document.getElementById('prodPrice').value.trim();
-
-        if (pName === "" || pPrice === "") {
-            alert("Məhsul adı və qiymətini yazın!");
-            return;
-        }
-
-        var data = JSON.parse(localStorage.getItem('shop_' + currentShop));
-        data.products.push({ id: Date.now(), name: pName, price: pPrice });
+    function submitProduct() {
+        let name = document.getElementById('pName').value.trim();
+        let price = document.getElementById('pPrice').value.trim();
+        let cat = document.getElementById('pCategory').value;
+        let img = document.getElementById('pImg').value.trim() || "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500";
         
-        localStorage.setItem('shop_' + currentShop, JSON.stringify(data));
+        if(!name || !price) { alert("Məhsul adı və qiymət mütləqdir!"); return; }
 
-        document.getElementById('prodName').value = "";
-        document.getElementById('prodPrice').value = "";
+        let shopName = localStorage.getItem('my_active_shop');
+        let shopPhone = localStorage.getItem('my_active_phone');
 
-        renderProducts(currentShop);
-    }
-
-    function deleteProduct(prodId) {
-        var currentShop = localStorage.getItem('activeSaaSShop');
-        var data = JSON.parse(localStorage.getItem('shop_' + currentShop));
-        
-        data.products = data.products.filter(p => p.id !== prodId);
-        localStorage.setItem('shop_' + currentShop, JSON.stringify(data));
-        
-        renderProducts(currentShop);
-    }
-
-    function renderProducts(currentShop) {
-        var data = JSON.parse(localStorage.getItem('shop_' + currentShop));
-        var sellerList = document.getElementById('sellerProductList');
-        sellerList.innerHTML = "";
-
-        if (data.products.length === 0) {
-            sellerList.innerHTML = "<p style='color:var(--text-muted); text-align:center; font-size:13px;'>Hələ heç bir məhsul qoymamısınız.</p>";
-            return;
-        }
-
-        data.products.forEach(function(prod) {
-            sellerList.innerHTML += '<div class="product-card">' +
-                '<div><div style="font-weight:600;">' + prod.name + '</div>' +
-                '<button class="delete-btn" onclick="deleteProduct(' + prod.id + ')">Sil 🗑️</button></div>' +
-                '<div class="product-price">' + prod.price + ' AZN</div>' +
-                '</div>';
+        let allAds = JSON.parse(localStorage.getItem('global_ads'));
+        allAds.unshift({
+            id: Date.now(),
+            name: name,
+            price: price,
+            category: cat,
+            img: img,
+            shop: shopName,
+            phone: shopPhone
         });
+
+        localStorage.setItem('global_ads', JSON.stringify(allAds));
+        
+        // Formu sıfırla və bağla
+        document.getElementById('pName').value = "";
+        document.getElementById('pPrice').value = "";
+        document.getElementById('pImg').value = "";
+        toggleModal('productModal', false);
+        
+        renderGrid();
     }
 
-    function showCustomerView(shopKey) {
-        var data = JSON.parse(localStorage.getItem('shop_' + shopKey));
+    function filterCategory(category) {
+        currentCategory = category;
         
-        document.getElementById('authSection').style.display = "none";
-        document.getElementById('dashboard').style.display = "none";
-        document.getElementById('customerView').style.display = "block";
-        
-        if (!data) {
-            document.getElementById('customerProductList').innerHTML = "<h3>Mağaza tapılmadı!</h3>";
+        // Aktiv düymə rəngini tənzimlə
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        if(category === 'all') document.getElementById('cat-all').classList.add('active');
+        if(category === 'Elektronika') document.getElementById('cat-elek').classList.add('active');
+        if(category === 'Geyim') document.getElementById('cat-geyim').classList.add('active');
+        if(category === 'Avto') document.getElementById('cat-avto').classList.add('active');
+        if(category === 'Əmlak') document.getElementById('cat-emlak').classList.add('active');
+
+        renderGrid();
+    }
+
+    function renderGrid() {
+        let allAds = JSON.parse(localStorage.getItem('global_ads')) || [];
+        let grid = document.getElementById('mainGrid');
+        grid.innerHTML = "";
+
+        let filtered = allAds.filter(ad => currentCategory === 'all' || ad.category === currentCategory);
+
+        if(filtered.length === 0) {
+            grid.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:var(--text-muted);'>Bu kateqoriyada hələ elan yoxdur.</p>";
             return;
         }
 
-        document.getElementById('clientShopName').innerText = data.shopName;
-        var clientList = document.getElementById('customerProductList');
-        clientList.innerHTML = "";
+        filtered.forEach(ad => {
+            let msg = encodeURIComponent(`Salam, TapAl.az saytında gördüyüm bu məhsulla bağlı yazmaq istəyirəm:\n📦 Məhsul: ${ad.name}\n💰 Qiymət: ${ad.price} AZN`);
+            let wsUrl = `https://wa.me/${ad.phone}?text=${msg}`;
 
-        if (data.products.length === 0) {
-            clientList.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>Bu mağazada hələ ki məhsul yoxdur.</p>";
-            return;
-        }
-
-        data.products.forEach(function(prod) {
-            var message = encodeURIComponent("Salam, Sizin mağazadan bu məhsulu sifariş etmək istəyirəm:\n📦 Məhsul: " + prod.name + "\n💰 Qiymət: " + prod.price + " AZN");
-            var wsLink = "https://wa.me/" + data.phone + "?text=" + message;
-
-            clientList.innerHTML += '<div class="product-card">' +
-                '<div>' +
-                    '<div style="font-weight:600; font-size:16px;">' + prod.name + '</div>' +
-                    '<a href="' + wsLink + '" target="_blank" class="ws-btn">WhatsApp ilə Al 💬</a>' +
-                '</div>' +
-                '<div class="product-price">' + prod.price + ' AZN</div>' +
-                '</div>';
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="${ad.img}" onerror="this.src='https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=500'">
+                    <div class="card-body">
+                        <div class="price">${ad.price} AZN</div>
+                        <div class="title">${ad.name}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                            <span class="shop-badge">🏪 ${ad.shop}</span>
+                            <a href="${wsUrl}" target="_blank" style="background:#25d366; color:white; padding:5px 10px; border-radius:6px; font-size:12px; text-decoration:none; font-weight:bold;">Sifariş 💬</a>
+                        </div>
+                    </div>
+                </div>
+            `;
         });
     }
 </script>
